@@ -10,52 +10,58 @@ const data = {
 
 // Only edit below
 
-// Some kind of destructuring happening, which also has wrong pathways
-// const { first = 1 } = data.first || {};
-// const { second = 1 } = data.second || {};
-// const { third = 1 } = data.third || {};
-
 const [, firstArray] = data.lists[0];
 const [, secondArray] = data.lists[1];
 const [, thirdArray] = data.lists[2];
 
-const result = []; // Supposed to contain all number values from the arrays
+const result = [];
 
-// Look into object/array properly, look at last value in array, determine which is biggest
+let biggestValue; // Declare it here so that it can be used in global scope
+
+/* One of the issues you run into is the fact that the arrays are not the same length, resulting in undefined values when logged in console.
+So we need to add something that checks the length of the arrays and ensures things execute for as long as the length of the array is bigger than 0.*/
+
 const extractBiggest = () => {
-  let biggerValue;
-  let biggestValue;
-  if (firstArray[firstArray.length - 1] > secondArray[secondArray.length - 1]) {
-    biggerValue = firstArray[firstArray.length - 1];
-    console.log(biggerValue);
-  } else if (
-    firstArray[firstArray.length - 1] < secondArray[secondArray.length - 1]
+  if (
+    firstArray.length > 0 || // Checks if any of the arrays have at least one value (in other words > 0), if yes do the following
+    secondArray.length > 0 ||
+    thirdArray.length > 0
   ) {
-    biggerValue = secondArray[secondArray.length - 1];
-    console.log(biggerValue);
-  }
+    let firstArrayValue = // Declares 3 let variables that will hold the last value in each array if it is bigger than 0
+      firstArray.length > 0 ? firstArray[firstArray.length - 1] : null;
+    let secondArrayValue =
+      secondArray.length > 0 ? secondArray[secondArray.length - 1] : null;
+    let thirdArrayValue =
+      thirdArray.length > 0 ? thirdArray[thirdArray.length - 1] : null;
 
-  if (thirdArray[thirdArray.length - 1] > biggerValue) {
-    biggestValue = thirdArray[thirdArray.length - 1];
-    console.log(biggestValue);
-  } else if (thirdArray[thirdArray.length - 1] < biggerValue) {
-    biggestValue = biggerValue;
-    console.log(biggestValue);
+    /* Now that we have the length checking system out of the way:
+
+        1. Compare the firstArrayValue with the second and third. If it's the biggestValue, assign it to biggestValue, and then remove it from the firstArray using .pop()
+        2. The code continues to do this for the secondArrayValue and thirdArrayValue
+        3. Once it has found the biggestValue and assigned it inside of the biggestValue variable it will return that at the end so that the function actually returns something for us
+        4. The code then pushes the returned result into the above declared const result array. It will do this 15 times.
+        5. We will have no undefined values because of different array lengths and achieve the desired result.
+
+    */
+    if (
+      firstArrayValue > secondArrayValue &&
+      firstArrayValue > thirdArrayValue
+    ) {
+      biggestValue = firstArrayValue;
+      firstArray.pop();
+    } else if (
+      secondArrayValue > firstArrayValue &&
+      secondArrayValue > thirdArrayValue
+    ) {
+      biggestValue = secondArrayValue;
+      secondArray.pop();
+    } else {
+      biggestValue = thirdArrayValue;
+      thirdArray.pop();
+    }
+    return biggestValue;
   }
 };
-extractBiggest();
-/* else if (
-    firstArray[firstArray.length - 1] < secondArray[secondArray.length - 1]
-  ) {
-    const biggerValue = secondArray[secondArray.length - 1];
-  }
-
-  if (thirdArray[thirdArray.length - 1] > biggerValue) {
-    const biggestValue = thirdArray[thirdArray.length - 1];
-  } else if (thirdArray[thirdArray.length - 1] < biggerValue) {
-    const biggestValue = biggerValue;
-  }
-}; // This will .push the biggest values into the result array below (result.push(answer)) BUT this also needs to .pop the value from the original array
 
 // Only edit above
 
@@ -78,4 +84,3 @@ result.push(extractBiggest());
 result.push(extractBiggest());
 
 console.log(result);
-*/
